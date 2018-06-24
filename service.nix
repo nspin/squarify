@@ -16,22 +16,16 @@ in
       type = types.str;
       example = "example.com";
     };
-
-    listen = mkOption {
-      type = with types; listOf (submodule {
-        options = {
-          addr = mkOption { type = str;  description = "IP address.";  };
-          port = mkOption { type = int;  description = "Port number."; default = 80; };
-          ssl  = mkOption { type = bool; description = "Enable SSL.";  default = false; };
+    extraVHostConfig = mkOption {
+      type = types.attrs;
+      example = ''
+        {
+          forceSSL = true;
+          sslCertificate = /foo/bar/cert.pem;
+          sslCertificateKey = /foo/bar/priv.pem;
         };
-      });
-      default = [];
-      example = [
-        { addr = "195.154.1.1"; port = 443; ssl = true;}
-        { addr = "192.154.1.1"; port = 80; }
-      ];
+      '';
     };
-
   };
 
   config = {
@@ -49,7 +43,6 @@ in
     services.nginx = {
       enable = true;
       virtualHosts."${cfg.serverName}" = {
-        inherit (cfg) listen;
         locations = {
           "/squarify" = {
             extraConfig = ''
@@ -61,7 +54,7 @@ in
             root = "${pkgs.pythonPackages.squarify}/lib/python3.6/site-packages/squarify/resources";
           };
         };
-      };
+      } // cfg.extraVHostConfig;
     };
 
     services.uwsgi = {

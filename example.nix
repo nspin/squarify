@@ -1,17 +1,18 @@
-{ config, ... }: {
+{ ... }: {
 
   imports = [
     ./service.nix
   ];
 
-  networking.firewall.allowedTCPPorts = map (builtins.getAttr "port") config.services.squarify.listen;
+  networking.firewall.allowedTCPPorts = [ 80 443 ];
 
   services.squarify = {
     serverName = "example.com";
-    listen = [{
-      addr = "0.0.0.0";
-      port = 80;
-    }];
+    extraVHostConfig = {
+      forceSSL = true;
+      sslCertificate = /foo/bar/cert.pem;
+      sslCertificateKey = /foo/bar/priv.pem;
+    };
   };
 
 }
