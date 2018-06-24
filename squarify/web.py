@@ -19,10 +19,15 @@ def post():
             },
         )
 
-if __name__ == '__main__':
+def debug():
+
+    import os.path
 
     @app.route('/', methods=['GET'])
     def get():
-        return send_file('index.html')
+        return send_file(os.path.join(os.path.dirname(__file__), 'index.html'))
 
     app.run(debug=True)
+
+if __name__ == '__main__':
+    debug()

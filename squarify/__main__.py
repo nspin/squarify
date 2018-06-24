@@ -1,17 +1,10 @@
+import sys
+from argparse import ArgumentParser
 from PIL import Image
 
-def squarify(im):
-    dom = max(im.width, im.height)
-    dim = dom - ((dom - im.width) % 2)
-    x = (dim - im.width)//2
-    y = max(0, (dim - im.height)//2)
-    out = Image.new(im.mode, (dim, dim))
-    out.paste(im, (x, y))
-    return out
+from squarify import squarify
 
 def main():
-    import sys
-    from argparse import ArgumentParser
     parser = ArgumentParser()
     parser.add_argument('in_path', metavar='INPUT_IMAGE_PATH', help='Input image path, or - for stdin.')
     parser.add_argument('out_path', metavar='OUTPUT_IMAGE_PATH', nargs='?', help='Output image path, or - for stdout. Default to square-INPUT_IMAGE_PATH, or - if INPUT_IMAGE_PATH is -.')
