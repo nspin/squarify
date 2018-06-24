@@ -6,7 +6,7 @@ from squarify import squarify
 
 app = Flask(__name__)
 
-@app.route('/', methods=['POST'])
+@app.route('/squarify', methods=['POST'])
 def post():
     f = request.files['file']
     im = Image.open(f.stream)
@@ -25,7 +25,7 @@ def debug():
 
     @app.route('/', methods=['GET'])
     def get():
-        return send_file(os.path.join(os.path.dirname(__file__), 'index.html'))
+        return send_file(os.path.join(os.path.dirname(__file__), 'resources/index.html'))
 
     app.run(debug=True)
 
